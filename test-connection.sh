@@ -26,7 +26,7 @@ IFX_DB="${IFX_DB:-stores}"
 IFX_SERVER="${IFX_SERVER:-ol_informix1410}"
 IFX_DRDA_SERVER="${IFX_DRDA_SERVER:-dr_informix1410}"
 IFX_USER="${IFX_USER:-informix}"
-JDBC_VERSION="${JDBC_VERSION:-3.70.JC3}"
+JDBC_VERSION="${JDBC_VERSION:-4.50.12}"
 JDBC_JAR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/ifxjdbc.jar"
 # Exporta para que o Java/Node/Spring enxerguem os valores (sem isso caem nos defaults internos)
 export IFX_HOST IFX_PORT IFX_DRDA_PORT IFX_DB IFX_SERVER IFX_DRDA_SERVER IFX_USER
