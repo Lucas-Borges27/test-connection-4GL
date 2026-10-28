@@ -22,7 +22,7 @@ set -euo pipefail
 IFX_HOST="${IFX_HOST:-169.44.161.21}"
 IFX_PORT="${IFX_PORT:-32615}"
 IFX_DRDA_PORT="${IFX_DRDA_PORT:-30902}"
-IFX_DB="${IFX_DB:-sysmaster}"
+IFX_DB="${IFX_DB:-stores}"
 IFX_SERVER="${IFX_SERVER:-ol_informix1410}"
 IFX_DRDA_SERVER="${IFX_DRDA_SERVER:-dr_informix1410}"
 IFX_USER="${IFX_USER:-informix}"
