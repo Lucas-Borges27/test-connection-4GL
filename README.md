@@ -26,51 +26,7 @@ O IBM Informix utiliza protocolos de comunicação diferentes para clientes base
 
 ---
 
-## 3. Passo a Passo de Execução
-
-### Passo 1: Inspecionar e Preparar a VM
-
-Para descobrir as portas dinâmicas atribuídas pelo instalador na VM e garantir que o encaminhamento de porta SSH esteja ativo:
-
-```bash
-ssh -i ./privatekey/vm_ssh_key.vm -p 32399 itzuser@169.44.161.21 '
-  echo "=== 1. Instancias no sqlhosts ==="
-  grep -E "onsoctcp|drsoctcp" /opt/IBM/informix/etc/sqlhosts.* 2>/dev/null
-
-  echo "=== 2. Portas no /etc/services ==="
-  grep -E "ol_informix|dr_informix" /etc/services
-
-  echo "=== 3. Habilitando AllowTcpForwarding no SSH ==="
-  sudo sed -i "s/^#\?AllowTcpForwarding.*/AllowTcpForwarding yes/" /etc/ssh/sshd_config
-  sudo sed -i "s/^#\?AllowTcpForwarding.*/AllowTcpForwarding yes/" /etc/ssh/sshd_config.d/*.conf 2>/dev/null || true
-  sudo systemctl reload sshd
-'
-```
-
-*Saída esperada de referência:*
-
-- **IP Interno da VM:** `10.10.10.201`
-- **Instância SQL (Java/JDBC):** `ol_informix1410` na porta `32615`
-- **Instância DRDA (Node.js):** `dr_informix1410` na porta `30902`
-
----
-
-### Passo 2: Abrir o Túnel SSH (Aba 1 do Terminal)
-
-Mantenha uma janela ou aba do terminal aberta com o túnel SSH mapeando ambas as portas para a sua máquina local:
-
-```bash
-chmod 600 ./privatekey/vm_ssh_key.vm
-
-ssh -i ./privatekey/vm_ssh_key.vm -p 32399 \
-  -L 32615:10.10.10.201:32615 \
-  -L 30902:10.10.10.201:30902 \
-  itzuser@169.44.161.21 -N
-```
-
----
-
-### Passo 3: Executar os Testes (Aba 2 do Terminal)
+## 3. Executar os Testes
 
 Na pasta raiz do projeto, execute o script de automação [`test-connection.sh`](test-connection.sh:1). Ele detecta e instala dependências faltantes (via Homebrew no macOS ou dnf/apt no Linux) e roda os testes.
 
@@ -88,7 +44,7 @@ Na pasta raiz do projeto, execute o script de automação [`test-connection.sh`]
 ./test-connection.sh node
 ```
 
-*(Cria o mini-projeto Node.js com `ibm_db`, conecta via DRDA na porta `24822` e exibe os registros em tabela)*.
+*(Cria o mini-projeto Node.js com `ibm_db`, conecta via DRDA na porta `30902` e exibe os registros em tabela)*.
 
 #### Opção C: Teste com Java Puro (JDBC)
 
@@ -179,7 +135,7 @@ ibmdb.open(connStr, (err, conn) => {
 ### C. DBeaver / Interface Gráfica
 
 - **Driver:** IBM Informix
-- **Host:** `127.0.0.1` (ou `localhost`)
+- **Host:** `169.44.161.21`
 - **Port:** `32615`
 - **Database:** `stores`
 - **Server Name:** `ol_informix1410`
